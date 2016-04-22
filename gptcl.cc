@@ -88,6 +88,7 @@ int GPTDataCL::DoOptions(int argc, char* argv[]) {
       {"randomize-guids", 'G', POPT_ARG_NONE, NULL, 'G', "randomize disk and partition GUIDs", ""},
       {"hybrid", 'h', POPT_ARG_STRING, &hybrids, 'h', "create hybrid MBR", "partnum[:partnum...]"},
       {"info", 'i', POPT_ARG_INT, &infoPartNum, 'i', "show detailed information on partition", "partnum"},
+      {"skip-sync", 'j', POPT_ARG_NONE, NULL, 'j', "Don't atempt to sync and update the parittion table", ""},
       {"load-backup", 'l', POPT_ARG_STRING, &backupFile, 'l', "load GPT backup from file", "file"},
       {"list-types", 'L', POPT_ARG_NONE, NULL, 'L', "list known partition types", ""},
       {"gpttombr", 'm', POPT_ARG_STRING, &mbrParts, 'm', "convert GPT to MBR", "partnum[:partnum...]"},
@@ -262,6 +263,9 @@ int GPTDataCL::DoOptions(int argc, char* argv[]) {
                   break;
                case 'i':
                   ShowPartDetails(infoPartNum - 1);
+                  break;
+               case 'j':
+                  TurnOffSyncing();
                   break;
                case 'l':
                   LoadBackupFile(backupFile, saveData, neverSaveData);
