@@ -1,6 +1,6 @@
-.\" Copyright 2011-2013 Roderick W. Smith (rodsmith@rodsbooks.com)
+.\" Copyright 2011-2015 Roderick W. Smith (rodsmith@rodsbooks.com)
 .\" May be distributed under the GNU General Public License
-.TH "SGDISK" "8" "0.8.10" "Roderick W. Smith" "GPT fdisk Manual"
+.TH "SGDISK" "8" "1.0.1" "Roderick W. Smith" "GPT fdisk Manual"
 .SH "NAME"
 sgdisk \- Command\-line GUID partition table (GPT) manipulator for Linux and Unix
 .SH "SYNOPSIS"
@@ -148,11 +148,11 @@ sibling. Options available in \fBsgdisk\fR are:
 .TP 
 .B \-a, \-\-set\-alignment=value
 Set the sector alignment multiple. GPT fdisk aligns the start of partitions
-to sectors that are multiples of this value, which defaults to 2048 on
-freshly formatted disks. This alignment value is necessary to obtain optimum
-performance with Western Digital Advanced Format and similar drives with larger
-physical than logical sector sizes, with some types of RAID arrays, and
-with SSD devices.
+to sectors that are multiples of this value, which defaults to 1MiB (2048
+on disks with 512-byte sectors) on freshly formatted disks. This alignment
+value is necessary to obtain optimum performance with Western Digital
+Advanced Format and similar drives with larger physical than logical sector
+sizes, with some types of RAID arrays, and with SSD devices.
 
 .TP
 .B \-A, \-\-attributes=list|[partnum:show|or|nand|xor|=|set|clear|toggle|get[:bitnum|hexbitmask]]
@@ -335,10 +335,7 @@ to use the first available partition number. Subsequent uses of the
 .TP
 .B \-N, \-\-largest\-new=num
 Create a new partition that fills the largest available block of space on
-the disk. Note that if used on a completely blank disk, this is likely to
-result in a sector-moved warning, since the first available sector
-(normally 34) doesn't fall on a 2048-sector boundary (the default for
-alignment). You can use the \fI\-a\fR (\fI\-\-set\-alignment\fR) option to
+the disk. You can use the \fI\-a\fR (\fI\-\-set\-alignment\fR) option to
 adjust the alignment, if desired. A num value of 0 causes the program to
 use the first available partition number.
 
@@ -353,11 +350,19 @@ disk's original partition table is bad; however, most other options on the
 same command line will be ignored.
 
 .TP 
+.B \-O, \-\-print\-mbr
+Display basic \fIMBR\fR partition summary data. This includes partition
+numbers, starting and ending sector numbers, partition sizes, MBR partition
+types codes, and partition names. This option is useful mainly for
+diagnosing partition table problems, particularly on disks with hybrid
+MBRs.
+
+.TP 
 .B \-p, \-\-print
-Display basic partition summary data. This includes partition
-numbers, starting and ending sector numbers, partition sizes,
-\fBsgdisk\fR's partition types codes, and partition names. For
-additional information, use the \fI\-i\fR (\fI\-\-info\fR) option.
+Display basic GPT partition summary data. This includes partition numbers,
+starting and ending sector numbers, partition sizes, \fBsgdisk\fR's
+partition types codes, and partition names. For additional information, use
+the \fI\-i\fR (\fI\-\-info\fR) option.
 
 .TP 
 .B \-P, \-\-pretend
@@ -475,7 +480,8 @@ An error occurred while reading the partition table
 
 .TP 
 .B 3
-Non\-GPT disk detected and no \fI\-g\fR option
+Non\-GPT disk detected and no \fI\-g\fR option, but operation requires a
+write action
 
 .TP 
 .B 4
@@ -491,8 +497,7 @@ sgdisk, but may with gdisk)
 Disk replication operation (-R) failed
 
 .SH "BUGS"
-As of March 2014 (version 0.8.10), \fBsgdisk\fR
-should be considered beta software. Known bugs and limitations include:
+Known bugs and limitations include:
 
 .TP 
 .B *
@@ -578,7 +583,7 @@ Contributors:
 
 * Justin Maggard (justin.maggard@netgear.com)
 
-* Dwight Schauer (dschauer@ti.com)
+* Dwight Schauer (dschauer@gmail.com)
 
 * Florian Zumbiehl (florz@florz.de)
 
