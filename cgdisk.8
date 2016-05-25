@@ -1,6 +1,6 @@
-.\" Copyright 2011-2013 Roderick W. Smith (rodsmith@rodsbooks.com)
+.\" Copyright 2011-2015 Roderick W. Smith (rodsmith@rodsbooks.com)
 .\" May be distributed under the GNU General Public License
-.TH "CGDISK" "8" "0.8.10" "Roderick W. Smith" "GPT fdisk Manual"
+.TH "CGDISK" "8" "1.0.1" "Roderick W. Smith" "GPT fdisk Manual"
 .SH "NAME"
 cgdisk \- Curses-based GUID partition table (GPT) manipulator
 .SH "SYNOPSIS"
@@ -181,12 +181,13 @@ Change the sector alignment value. Disks with more logical sectors than
 physical sectors (such as modern Advanced Format drives), some RAID
 configurations, and many SSD devices, can suffer performance problems if
 partitions are not aligned properly for their internal data structures. On
-new disks, GPT fdisk attempts to align partitions on 2048\-sector (1MiB)
-boundaries by default, which optimizes performance for all of these disk
-types. On pre\-partitioned disks, GPT fdisk attempts to identify the
-alignment value used on that disk, but will set 8-sector alignment on disks
-larger than 300 GB even if lesser alignment values are detected. In either
-case, it can be changed by using this option.
+new disks, GPT fdisk attempts to align partitions on 1MiB boundaries
+(2048\-sectors on disks with 512-byte sectors) by default, which optimizes
+performance for all of these disk types. On pre\-partitioned disks, GPT
+fdisk attempts to identify the alignment value used on that disk, but will
+set 8-sector alignment on disks larger than 300 GB even if lesser alignment
+values are detected. In either case, it can be changed by using this
+option.
 
 .TP 
 .B Backup
@@ -276,10 +277,7 @@ Write data. Use this command to save your changes.
 
 .SH "BUGS"
 
-As of March 2014 (version 0.8.10), \fBcgdisk\fR should be considered
-beta software. Although the underlying partition manipulation code is much
-older, the \fBcgdisk\fR ncurses user interface is brand new with GPT fdisk
-version 0.8.0. Known bugs and limitations include:
+Known bugs and limitations include:
 
 .TP 
 .B *
@@ -367,7 +365,7 @@ Contributors:
 
 * Justin Maggard (justin.maggard@netgear.com)
 
-* Dwight Schauer (dschauer@ti.com)
+* Dwight Schauer (dschauer@gmail.com)
 
 * Florian Zumbiehl (florz@florz.de)
 
