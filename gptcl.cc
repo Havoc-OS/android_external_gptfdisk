@@ -23,6 +23,7 @@
 #include <iostream>
 #include <sstream>
 #include <errno.h>
+#include <popt.h>
 #include "gptcl.h"
 
 GPTDataCL::GPTDataCL(void) {
@@ -71,7 +72,8 @@ int GPTDataCL::DoOptions(int argc, char* argv[]) {
 
    struct poptOption theOptions[] =
    {
-      {"attributes", 'A', POPT_ARG_STRING, &attributeOperation, 'A', "operate on partition attributes", "list|[partnum:show|or|nand|xor|=|set|clear|toggle|get[:bitnum|hexbitmask]]"},
+      {"attributes", 'A', POPT_ARG_STRING, &attributeOperation, 'A', "operate on partition attributes",
+          "list|[partnum:show|or|nand|xor|=|set|clear|toggle|get[:bitnum|hexbitmask]]"},
       {"set-alignment", 'a', POPT_ARG_INT, &alignment, 'a', "set sector alignment", "value"},
       {"backup", 'b', POPT_ARG_STRING, &backupFile, 'b', "backup GPT to file", "file"},
       {"change-name", 'c', POPT_ARG_STRING, &partName, 'c', "change partition's name", "partnum:name"},
@@ -92,6 +94,7 @@ int GPTDataCL::DoOptions(int argc, char* argv[]) {
       {"new", 'n', POPT_ARG_STRING, &newPartInfo, 'n', "create new partition", "partnum:start:end"},
       {"largest-new", 'N', POPT_ARG_INT, &largestPartNum, 'N', "create largest possible new partition", "partnum"},
       {"clear", 'o', POPT_ARG_NONE, NULL, 'o', "clear partition table", ""},
+      {"print-mbr", 'O', POPT_ARG_NONE, NULL, 'O', "print MBR partition table", ""},
       {"print", 'p', POPT_ARG_NONE, NULL, 'p', "print partition table", ""},
       {"pretend", 'P', POPT_ARG_NONE, NULL, 'P', "make changes in memory, but don't write them", ""},
       {"transpose", 'r', POPT_ARG_STRING, &twoParts, 'r', "transpose two partitions", "partnum:partnum"},
@@ -304,8 +307,8 @@ int GPTDataCL::DoOptions(int argc, char* argv[]) {
                   startSector = FindFirstInLargest();
                   Align(&startSector);
                   endSector = FindLastInFree(startSector);
-                  if (largestPartNum < 0)
-                     largestPartNum = FindFirstFreePart();
+                  if (largestPartNum <= 0)
+                     largestPartNum = FindFirstFreePart() + 1;
                   if (CreatePartition(largestPartNum - 1, startSector, endSector)) {
                      saveData = 1;
                   } else {
@@ -319,6 +322,9 @@ int GPTDataCL::DoOptions(int argc, char* argv[]) {
                   ClearGPTData();
                   saveData = 1;
                   break;
+               case 'O':
+                   DisplayMBRData();
+                   break;
                case 'p':
                   DisplayGPTData();
                   break;
@@ -399,7 +405,7 @@ int GPTDataCL::DoOptions(int argc, char* argv[]) {
                   if (!pretend) {
                      DestroyGPT();
                   } // if
-                  saveNonGPT = 0;
+                  saveNonGPT = 1;
                   saveData = 0;
                   break;
                case 'Z':
@@ -407,7 +413,7 @@ int GPTDataCL::DoOptions(int argc, char* argv[]) {
                      DestroyGPT();
                      DestroyMBR();
                   } // if
-                  saveNonGPT = 0;
+                  saveNonGPT = 1;
                   saveData = 0;
                   break;
                default:
@@ -441,7 +447,7 @@ int GPTDataCL::DoOptions(int argc, char* argv[]) {
                   if (!pretend) {
                      DestroyGPT();
                   } // if
-                  saveNonGPT = 0;
+                  saveNonGPT = 1;
                   saveData = 0;
                   break;
                case 'Z':
@@ -449,7 +455,7 @@ int GPTDataCL::DoOptions(int argc, char* argv[]) {
                      DestroyGPT();
                      DestroyMBR();
                   } // if
-                  saveNonGPT = 0;
+                  saveNonGPT = 1;
                   saveData = 0;
                   break;
             } // switch
@@ -457,7 +463,8 @@ int GPTDataCL::DoOptions(int argc, char* argv[]) {
          retval = 2;
       } // if/else loaded OK
       if ((saveData) && (!neverSaveData) && (saveNonGPT) && (!pretend)) {
-         SaveGPTData(1);
+         if (!SaveGPTData(1))
+            retval = 4;
       }
       if (saveData && (!saveNonGPT)) {
          cout << "Non-GPT disk; not saving changes. Use -g to override.\n";
