@@ -109,7 +109,7 @@ int GPTDataCL::DoOptions(int argc, char* argv[]) {
       {"version", 'V', POPT_ARG_NONE, NULL, 'V', "display version information", ""},
       {"zap", 'z', POPT_ARG_NONE, NULL, 'z', "zap (destroy) GPT (but not MBR) data structures", ""},
       {"zap-all", 'Z', POPT_ARG_NONE, NULL, 'Z', "zap (destroy) GPT and MBR data structures", ""},
-      POPT_AUTOHELP { NULL, 0, 0, NULL, 0 }
+      POPT_AUTOHELP { NULL, 0, 0, NULL, 0, NULL, NULL }
    };
 
    // Create popt context...
