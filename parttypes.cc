@@ -2,7 +2,7 @@
 // Class to manage partition type codes -- a slight variant on MBR type
 // codes, GUID type codes, and associated names.
 
-/* This program is copyright (c) 2009-2015 by Roderick W. Smith. It is distributed
+/* This program is copyright (c) 2009-2014 by Roderick W. Smith. It is distributed
   under the terms of the GNU GPL version 2, as detailed in the COPYING file. */
 
 #define __STDC_LIMIT_MACROS
@@ -99,16 +99,12 @@ void PartType::AddAllTypes(void) {
    AddType(0x3000, "7412F7D5-A156-4B13-81DC-867174929325", "ONIE boot");
    AddType(0x3001, "D4E6E2CD-4469-46F3-B5CB-1BFF57AFC149", "ONIE config");
 
-   // Plan 9; see http://man.cat-v.org/9front/8/prep
-   AddType(0x3900, "C91818F9-8025-47AF-89D2-F030D7000C2C", "Plan 9");
-
    // PowerPC reference platform boot partition
    AddType(0x4100, "9E1A2D38-C612-4316-AA26-8B49521E5A8B", "PowerPC PReP boot");
 
    // Windows LDM ("dynamic disk") types
    AddType(0x4200, "AF9B60A0-1431-4F62-BC68-3311714A69AD", "Windows LDM data"); // Logical disk manager
    AddType(0x4201, "5808C8AA-7E8F-42E0-85D2-E1E90434CFB3", "Windows LDM metadata"); // Logical disk manager
-   AddType(0x4202, "E75CAF8F-F680-4CEE-AFA3-B001E56EFC2D", "Windows Storage Spaces"); // A newer LDM-type setup
 
    // An oddball IBM filesystem....
    AddType(0x7501, "37AFFC90-EF7D-4E96-91C3-2D7AE055B174", "IBM GPFS"); // General Parallel File System (GPFS)
@@ -134,7 +130,6 @@ void PartType::AddAllTypes(void) {
    AddType(0x8304, "4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709", "Linux x86-64 root (/)"); // Linux / on x86-64 (auto-mounted by systemd)
    AddType(0x8305, "B921B045-1DF0-41C3-AF44-4C6F280D3FAE", "Linux ARM64 root (/)"); // Linux / on 64-bit ARM (auto-mounted by systemd)
    AddType(0x8306, "3B8F8425-20E0-4F3B-907F-1A25A76F98E8", "Linux /srv"); // Linux /srv (auto-mounted by systemd)
-   AddType(0x8307, "69DAD710-2CE4-4E3C-B16C-21A1D49ABED3", "Linux ARM32 root (/)"); // Linux / on 32-bit ARM (auto-mounted by systemd)
 
    // Used by Intel Rapid Start technology
    AddType(0x8400, "D3BFE2DE-3DAF-11DF-BA40-E3A556D89593", "Intel Rapid Start");
@@ -160,9 +155,6 @@ void PartType::AddAllTypes(void) {
    AddType(0xa584, "85D5E45D-237C-11E1-B4B3-E89A8F7FC3A7", "Midnight BSD ZFS");
    AddType(0xa585, "85D5E45C-237C-11E1-B4B3-E89A8F7FC3A7", "Midnight BSD Vinum");
 
-   // OpenBSD partition type....
-   AddType(0xa600, "824CC7A0-36A8-11E3-890A-952519AD3F61", "OpenBSD disklabel");
-
    // A MacOS partition type, separated from others by NetBSD partition types...
    AddType(0xa800, "55465300-0000-11AA-AA11-00306543ECAC", "Apple UFS"); // Mac OS X
 
@@ -177,16 +169,13 @@ void PartType::AddAllTypes(void) {
    AddType(0xa906, "49F48DAA-B10E-11DC-B99B-0019D1879648", "NetBSD RAID");
 
    // Mac OS partition types (See also 0xa800, above)....
-   AddType(0xab00, "426F6F74-0000-11AA-AA11-00306543ECAC", "Recovery HD");
+   AddType(0xab00, "426F6F74-0000-11AA-AA11-00306543ECAC", "Apple boot");
    AddType(0xaf00, "48465300-0000-11AA-AA11-00306543ECAC", "Apple HFS/HFS+");
    AddType(0xaf01, "52414944-0000-11AA-AA11-00306543ECAC", "Apple RAID");
    AddType(0xaf02, "52414944-5F4F-11AA-AA11-00306543ECAC", "Apple RAID offline");
    AddType(0xaf03, "4C616265-6C00-11AA-AA11-00306543ECAC", "Apple label");
    AddType(0xaf04, "5265636F-7665-11AA-AA11-00306543ECAC", "AppleTV recovery");
    AddType(0xaf05, "53746F72-6167-11AA-AA11-00306543ECAC", "Apple Core Storage");
-
-   // Acronis Secure Zone
-   AddType(0xbc00, "0311FC50-01CA-4725-AD77-9ADBB20ACE98", "Acronis Secure Zone");
 
    // Solaris partition types (one of which is shared with MacOS)
    AddType(0xbe00, "6A82CB45-1DD2-11B2-99A6-080020736631", "Solaris boot");
@@ -226,7 +215,7 @@ void PartType::AddAllTypes(void) {
    // Ceph type codes; see https://github.com/ceph/ceph/blob/9bcc42a3e6b08521694b5c0228b2c6ed7b3d312e/src/ceph-disk#L76-L81
    AddType(0xf800, "4FBD7E29-9D25-41B8-AFD0-062C0CEFF05D", "Ceph OSD"); // Ceph Object Storage Daemon
    AddType(0xf801, "4FBD7E29-9D25-41B8-AFD0-5EC00CEFF05D", "Ceph dm-crypt OSD"); // Ceph Object Storage Daemon (encrypted)
-   AddType(0xf802, "45B0969E-9B03-4F30-B4C6-B4B80CEFF106", "Ceph journal");
+   AddType(0xf802, "BFBFAFE7-A34F-448A-9A5B-6213EB736C22", "Ceph journal");
    AddType(0xf803, "45B0969E-9B03-4F30-B4C6-5EC00CEFF106", "Ceph dm-crypt journal");
    AddType(0xf804, "89C57F98-2FE5-4DC0-89C1-F3AD0CEFF2BE", "Ceph disk in creation");
    AddType(0xf805, "89C57F98-2FE5-4DC0-89C1-5EC00CEFF2BE", "Ceph dm-crypt disk in creation");

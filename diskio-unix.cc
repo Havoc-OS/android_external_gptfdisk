@@ -76,8 +76,7 @@ int DiskIO::OpenForRead(void) {
          if (fstat64(fd, &st) == 0) {
             if (S_ISDIR(st.st_mode))
                cerr << "The specified path is a directory!\n";
-#if !(defined(__FreeBSD__) || defined(__FreeBSD_kernel__)) \
-                       && !defined(__APPLE__)
+#if !defined(__FreeBSD__) && !defined(__APPLE__)
             else if (S_ISCHR(st.st_mode))
                cerr << "The specified path is a character device!\n";
 #endif
@@ -256,8 +255,7 @@ int DiskIO::DiskSync(void) {
       i = ioctl(fd, BLKRRPART);
       if (i) {
          cout << "Warning: The kernel is still using the old partition table.\n"
-              << "The new table will be used at the next reboot or after you\n"
-              << "run partprobe(8) or kpartx(8)\n";
+              << "The new table will be used at the next reboot.\n";
       } else {
          retval = 1;
       } // if/else
@@ -275,7 +273,7 @@ int DiskIO::DiskSync(void) {
 // Note that seeking beyond the end of the file is NOT detected as a failure!
 int DiskIO::Seek(uint64_t sector) {
    int retval = 1;
-   off_t seekTo, sought;
+   off64_t seekTo, sought;
 
    // If disk isn't open, try to open it....
    if (!isOpen) {
