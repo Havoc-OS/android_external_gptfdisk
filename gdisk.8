@@ -1,6 +1,6 @@
-.\" Copyright 2011-2015 Roderick W. Smith (rodsmith@rodsbooks.com)
+.\" Copyright 2011-2013 Roderick W. Smith (rodsmith@rodsbooks.com)
 .\" May be distributed under the GNU General Public License
-.TH "GDISK" "8" "1.0.1" "Roderick W. Smith" "GPT fdisk Manual"
+.TH "GDISK" "8" "0.8.10" "Roderick W. Smith" "GPT fdisk Manual"
 .SH "NAME"
 gdisk \- Interactive GUID partition table (GPT) manipulator
 .SH "SYNOPSIS"
@@ -212,8 +212,7 @@ sector.
 .B o
 Clear out all partition data. This includes GPT header data,
 all partition definitions, and the protective MBR. The sector alignment
-is reset to the default (1MB, or 2048 sectors on a disk with 512-byte
-sectors).
+is reset to the default (2048 sectors, or 1MB).
 
 .TP 
 .B p
@@ -471,13 +470,12 @@ Change the sector alignment value. Disks with more logical sectors per
 physical sectors (such as modern Advanced Format drives), some RAID
 configurations, and many SSD devices, can suffer performance problems if
 partitions are not aligned properly for their internal data structures. On
-new disks, GPT fdisk attempts to align partitions on 1MiB boundaries
-(2048\-sectors on disks with 512-byte sectors) by default, which optimizes
-performance for all of these disk types. On pre\-partitioned disks, GPT
-fdisk attempts to identify the alignment value used on that disk, but will
-set 8-sector alignment on disks larger than 300 GB even if lesser alignment
-values are detected. In either case, it can be changed by using this
-option.
+new disks, GPT fdisk attempts to align partitions on 2048\-sector (1MiB)
+boundaries by default, which optimizes performance for all of these disk
+types. On pre\-partitioned disks, GPT fdisk attempts to identify the
+alignment value used on that disk, but will set 8-sector alignment on disks
+larger than 300 GB even if lesser alignment values are detected. In either
+case, it can be changed by using this option.
 
 .TP 
 .B m
@@ -563,7 +561,8 @@ entering data. When only one option is possible, \fBgdisk\fR
 usually bypasses the prompt entirely.
 
 .SH "BUGS"
-Known bugs and limitations include:
+As of March 2014 (version 0.8.10), \fBgdisk\fR
+should be considered beta software. Known bugs and limitations include:
 
 .TP 
 .B *
@@ -661,7 +660,7 @@ Contributors:
 
 * Justin Maggard (justin.maggard@netgear.com)
 
-* Dwight Schauer (dschauer@gmail.com)
+* Dwight Schauer (dschauer@ti.com)
 
 * Florian Zumbiehl (florz@florz.de)
 
