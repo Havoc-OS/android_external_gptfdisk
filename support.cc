@@ -36,24 +36,6 @@ using namespace std;
 // Reads a string from stdin, returning it as a C++-style string.
 // Note that the returned string will NOT include the carriage return
 // entered by the user.
-#ifdef EFI
-extern int __sscanf( const char * str , const char * format , ... ) ;
-string ReadString(void) {
-   string inString;
-   char efiString[256];
-   int stringLength;
-
-   if (fgets(efiString, 255, stdin) != NULL) {
-      stringLength = strlen(efiString);
-      if ((stringLength > 0) && (efiString[stringLength - 1] == '\n'))
-          efiString[stringLength - 1] = '\0';
-      inString = efiString;
-   } else {
-      inString = "";
-   }
-   return inString;
-} // ReadString()
-#else
 string ReadString(void) {
    string inString;
 
@@ -62,7 +44,6 @@ string ReadString(void) {
       exit(5);
    return inString;
 } // ReadString()
-#endif
 
 // Get a numeric value from the user, between low and high (inclusive).
 // Keeps looping until the user enters a value within that range.
@@ -153,7 +134,7 @@ uint64_t GetSectorNum(uint64_t low, uint64_t high, uint64_t def, uint64_t sSize,
 uint64_t IeeeToInt(string inValue, uint64_t sSize, uint64_t low, uint64_t high, uint64_t def) {
    uint64_t response = def, bytesPerUnit = 1, mult = 1, divide = 1;
    size_t foundAt = 0;
-   char suffix = ' ', plusFlag = ' ';
+   char suffix, plusFlag = ' ';
    string suffixes = "KMGTPE";
    int badInput = 0; // flag bad input; once this goes to 1, other values are irrelevant
 
@@ -246,7 +227,7 @@ string BytesToIeee(uint64_t size, uint32_t sectorSize) {
    uint64_t sizeInIeee;
    uint64_t previousIeee;
    float decimalIeee;
-   uint64_t index = 0;
+   uint index = 0;
    string units, prefixes = " KMGTPEZ";
    ostringstream theValue;
 
