@@ -69,6 +69,7 @@ GPTData::GPTData(void) {
    state = gpt_valid;
    device = "";
    justLooking = 0;
+   syncing = 1;
    mainCrcOk = 0;
    secondCrcOk = 0;
    mainPartsCrcOk = 0;
@@ -93,6 +94,7 @@ GPTData::GPTData(string filename) {
    state = gpt_invalid;
    device = "";
    justLooking = 0;
+   syncing = 1;
    mainCrcOk = 0;
    secondCrcOk = 0;
    mainPartsCrcOk = 0;
@@ -128,6 +130,7 @@ GPTData & GPTData::operator=(const GPTData & orig) {
    diskSize = orig.diskSize;
    state = orig.state;
    justLooking = orig.justLooking;
+   syncing = orig.syncing;
    mainCrcOk = orig.mainCrcOk;
    secondCrcOk = orig.secondCrcOk;
    mainPartsCrcOk = orig.mainPartsCrcOk;
@@ -1142,7 +1145,7 @@ int GPTData::SaveGPTData(int quiet) {
          // original partition table from its cache. OTOH, such restoration might be
          // desirable if the error occurs later; but that seems unlikely unless the initial
          // write fails....
-         if (syncIt)
+         if (syncIt && syncing)
             myDisk.DiskSync();
 
          if (allOK) { // writes completed OK
@@ -1374,7 +1377,9 @@ int GPTData::DestroyGPT(void) {
             allOK = 0;
          } // if
       } // if
-      myDisk.DiskSync();
+      if (syncing) {
+         myDisk.DiskSync();
+      }
       myDisk.Close();
       cout << "GPT data structures destroyed! You may now partition the disk using fdisk or\n"
            << "other utilities.\n";
